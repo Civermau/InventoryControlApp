@@ -157,7 +157,7 @@ public static partial class UI
             Console.Write("Correo: ");
             correo = Console.ReadLine();
         } while (!EmailValidation(correo));
-
+        
         do
         {
             Console.WriteLine("Plantel: ");

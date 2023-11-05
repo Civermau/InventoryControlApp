@@ -22,22 +22,21 @@ public static partial class UI
                 Console.WriteLine($"¡Bienvenido, {userName}!");
                 Console.WriteLine("");
                 int TipoUsuario=0;
-                 if (user.Docentes.Any())
-                 {
-                    
-                  TipoUsuario=1;
+                if (user.Docentes.Any())
+                {
+                    TipoUsuario=1;
                 }
-                 else if (user.Estudiantes.Any())
-                 {
-                   TipoUsuario=2;
+                else if (user.Estudiantes.Any())
+                {
+                    TipoUsuario=2;
                 }
                 else if (user.Almacenistas.Any())
                 {
-                   TipoUsuario=3;
+                    TipoUsuario=3;
                 }
                 else if (user.Coordinadores.Any())
                 {
-                 TipoUsuario=4;
+                    TipoUsuario=4;
                 }
                 return (user,TipoUsuario);
             }
