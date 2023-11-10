@@ -61,5 +61,3 @@ Estos estándares de codificación ahora reflejan tu prioridad en las reglas y p
 - Git: Utilizarlo para poder controlar el código que tienes en tu ordenador y poder subirlo al repositorio
 
 - Google Docs: Recuerda que peudes ir a revisar el documento de google donde se almacenan los requerimentos
-
-- test push
