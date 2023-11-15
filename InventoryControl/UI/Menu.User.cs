@@ -3,6 +3,7 @@ using AlmacenDataContext;
 using AlmacenSQLiteEntities;
 
 public static partial class UI{
+    //Menu para el estudiante
     static void StudentUI(Estudiante? estudiante){
         do{
             WriteLine("Alumno Menu:");
@@ -38,6 +39,7 @@ public static partial class UI{
         } while (true);
     }
 
+    //Menu para el docente
     static void TeacherUI(Docente? docente){
         do{
             WriteLine("Profesor Menu:");
@@ -80,6 +82,7 @@ public static partial class UI{
         } while (true);
     }
 
+    //Menu para el almacenista
     static void InventoryManagerUI(Almacenista? almacenista){
         do{
             WriteLine("Almacenista Menu:");
@@ -141,6 +144,7 @@ public static partial class UI{
         } while (true);
     }
 
+    //Menu para el administrador
     static void AdministratorUI(Coordinador? coordinador){
         do{
             WriteLine("Administrador Menu:");

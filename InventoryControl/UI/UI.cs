@@ -4,6 +4,7 @@ public static partial class UI
 {
     public static void Manage()
     {
+        //menu para iniciar sesion, hacer signup o cambiar la contraseña en caso de que el usuario lo quiera
         while (true)
         {
             WriteLine("1: Login ");

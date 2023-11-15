@@ -4,6 +4,7 @@ using AlmacenSQLiteEntities;
 
 public static partial class UI
 {
+    //Menu para que el usuario pueda agregar, modificar o elimiar material
     static void ManageInventory()
     {
         do

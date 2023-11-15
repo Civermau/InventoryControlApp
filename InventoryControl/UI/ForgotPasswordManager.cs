@@ -5,6 +5,7 @@ using System.Linq;
 
 public static partial class UI
 {
+    //funcion para recuperar contraseña
     public static void ForgotPassword()
     {
         Console.Clear();
@@ -13,6 +14,7 @@ public static partial class UI
 
         using (Almacen db = new Almacen())
         {
+            //busca el correo ingresado entre todos los usuarios
             Usuario usuario = db.Usuarios
                 .FirstOrDefault(u => u.Almacenistas.Any(a => a.Correo == email)
                                     || u.Coordinadores.Any(c => c.Correo == email)
@@ -21,6 +23,7 @@ public static partial class UI
 
             if (usuario != null)
             {
+                //genera el codigo de verificacion y lo manda al usuario
                 string verificationCode = GenerateRandomString();
 
                 SendVerificationCodeByEmail(email, verificationCode);
@@ -39,6 +42,7 @@ public static partial class UI
                     {
                         Console.WriteLine("Ingresa tu nueva contraseña:");
                         newPassword = Console.ReadLine() ?? "";
+                        //validamos el formato de la contraseña
                         validationCode = PasswordValidation(newPassword);
 
                         switch (validationCode)
@@ -78,6 +82,7 @@ public static partial class UI
         }
     }
 
+    //generador del string aleatorio para recuperar la contraseña
     private static string GenerateRandomString()
     {
         string guid = Guid.NewGuid().ToString();
@@ -85,6 +90,7 @@ public static partial class UI
         return parts[0];
     }
 
+    //funcion para enviar el correo de verificacion
     private static void SendVerificationCodeByEmail(string email, string verificationCode)
     {
         EmailSender emailSender = new EmailSender();
@@ -94,6 +100,7 @@ public static partial class UI
         emailSender.sendMail();
     }
 
+    //envia el correo de solicitudes de material al maestro
     public static void SendNotTeacher(Estudiante estudiante, DescPedido descPedido, Pedido pedido){
         using (Almacen db = new()){
             EmailSender emailSender = new EmailSender();
@@ -112,6 +119,8 @@ public static partial class UI
             emailSender.sendMail();
         }
     }
+
+    //envia el correo del estado de la solicitud del alumno
     public static void SendEmailForOrderState(Estudiante? estudiante, string? razon, Pedido pedido){
         EmailSender emailSender = new EmailSender();
         emailSender.setDestinatary(estudiante.Correo);
@@ -125,6 +134,7 @@ public static partial class UI
         emailSender.sendMail();
     }
 
+    //Envia notificaicon de la orden
     public static void NotificationOfOrders(Estudiante estudiante){
         if (estudiante == null)
         {

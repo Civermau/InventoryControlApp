@@ -2,6 +2,7 @@ using System;
 using AlmacenDataContext;
 using AlmacenSQLiteEntities;
 public static partial class CrudFuntions{
+    
     public static void OrderMaterial(int typeOfUser, int? userID){
         using (Almacen db = new()){
             Pedido pedido = new Pedido();

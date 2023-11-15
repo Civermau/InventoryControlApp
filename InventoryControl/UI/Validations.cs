@@ -409,7 +409,7 @@ public static bool DateValidation(string? sDate)
     return validDate;
 }
 
-
+//funcion que obtiene el ID del laboratorio ingresado por el usuario
 public static int GetLabID(string? sLab)
 {
     using (Almacen db = new())
@@ -436,6 +436,7 @@ public static int GetLabID(string? sLab)
     }
 }
 
+//funcion que valida el laboratorio ingresado por el usuario
 public static bool LabValidation(int realLab)
 {
     bool validLab;
@@ -463,6 +464,8 @@ public static bool LabValidation(int realLab)
     }
     return validLab;
 }
+
+//funcion que valida las horas ingresadas por el usuario
 public static bool HourValidation(string? sHour)
 {
     bool validHour;
@@ -486,6 +489,7 @@ public static bool HourValidation(string? sHour)
     return validHour;
 }
 
+//funcion que obtiene el id del material
 public static int GetMaterialID(int categoryId){
     using (Almacen db = new()){
         try{
@@ -511,6 +515,7 @@ public static int GetMaterialID(int categoryId){
     }
 }
 
+//funcion que obtiene el material mediante el ID
 public static int GetMaterialForID(string? id)
 {
     using (Almacen db = new())
@@ -537,6 +542,7 @@ public static int GetMaterialForID(string? id)
     }
 }
 
+//funcion que valida el material ingresado por el usuario
 public static bool MaterialValidation(int realMaterial)
 {
     bool validMaterial;
@@ -565,6 +571,7 @@ public static bool MaterialValidation(int realMaterial)
     return validMaterial;
 }
 
+//funcion que obtiene el pedido y regresa el ID
 public static int GetPedidoID(string? id)
 {
     using (Almacen db = new())
@@ -591,6 +598,7 @@ public static int GetPedidoID(string? id)
     }
 }
 
+//funcion que valida el pedido
 public static bool PedidoValidation(int realPedido)
 {
     bool validPedido;
@@ -619,6 +627,7 @@ public static bool PedidoValidation(int realPedido)
     return validPedido;
 }
 
+//funcion que obtiene el ID del docente ingresado por el usuario
 public static int GetDocenteID(string? id)
 {
     using (Almacen db = new())
@@ -645,6 +654,7 @@ public static int GetDocenteID(string? id)
     }
 }
 
+//funcion que verifica el docente ingresado por el usuario
 public static bool DocenteValidation(int realDocente)
 {
     bool validDocente;
@@ -673,6 +683,7 @@ public static bool DocenteValidation(int realDocente)
     return validDocente;
 }
 
+//funcion que obtiene el ID del almacenista ingresado por el usuario
 public static int GetAlmacenistaID(string? id)
 {
     using (Almacen db = new())
@@ -699,6 +710,7 @@ public static int GetAlmacenistaID(string? id)
     }
 }
 
+//funcion que valida el almacenista ingresado por el usuario
 public static bool AlmacenistaValidation(int realAlmacenista)
 {
     bool validAlmacenista;
@@ -727,6 +739,7 @@ public static bool AlmacenistaValidation(int realAlmacenista)
     return validAlmacenista;
 }
 
+//funcion que obtiene el ID del estudiante seleccionado por el usuario
 public static int GetEstudianteID(string? id)
 {
     using (Almacen db = new())
@@ -753,6 +766,7 @@ public static int GetEstudianteID(string? id)
     }
 }
 
+//funcion que valida el estudiante seleccionado por el usuario
 public static bool EstudianteValidation(int realEstudiante)
 {
     bool validEstudiante;
@@ -781,6 +795,7 @@ public static bool EstudianteValidation(int realEstudiante)
     return validEstudiante;
 }
 
+//funcion que obtiene el ID de la marca ingresada por el usuario
 public static int GetMarcaID(string? id)
 {
     using (Almacen db = new())
@@ -807,6 +822,7 @@ public static int GetMarcaID(string? id)
     }
 }
 
+//funcion que valida la marca ingresada por el usuario
 public static bool MarcaValidation(int realMarca)
 {
     bool validMarca;
@@ -835,6 +851,7 @@ public static bool MarcaValidation(int realMarca)
     return validMarca;
 }
 
+//funcion que obtiene el ID del modelo ingresado por el usuario
 public static int GetModeloID(string? id)
 {
     using (Almacen db = new())
@@ -860,7 +877,7 @@ public static int GetModeloID(string? id)
         }
     }
 }
-
+//funcion que valida que el modelo ingresado sea correcto
 public static bool ModeloValidation(int realModelo)
 {
     bool validModelo;
@@ -888,7 +905,7 @@ public static bool ModeloValidation(int realModelo)
     }
     return validModelo;
 }
-
+//funcion que obtiene el ID de la categoria ingresada por el usuario
 public static int GetCategoriaID(string? id)
 {
     using (Almacen db = new())
@@ -914,7 +931,7 @@ public static int GetCategoriaID(string? id)
         }
     }
 }
-
+//funcion que valida la categoria ingresada por el usuario
 public static bool CategoriaValidation(int realCategoria)
 {
     bool validCategoria;
@@ -942,7 +959,7 @@ public static bool CategoriaValidation(int realCategoria)
     }
     return validCategoria;
 }
-
+//funcion que obtiene el ID del mantenimiento ingresado por el usuario
 public static int GetMantenimientoID(string? id)
 {
     using (Almacen db = new())
@@ -969,6 +986,7 @@ public static int GetMantenimientoID(string? id)
     }
 }
 
+//validacion para revisar que el mantenimiento que ingreso el usuario es correcto
 public static bool MantenimientoValidation(int realMantenimiento)
 {
     bool validMantenimiento;

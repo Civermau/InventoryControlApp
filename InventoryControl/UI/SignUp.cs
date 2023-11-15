@@ -5,8 +5,11 @@ using AlmacenSQLiteEntities;
 using InventoryControl.UI;
 using System.Security.Cryptography.X509Certificates;
 public static partial class UI{
+
+    //funcion para que el usuario introduzca sus datos al hacer sign up
     public static Person GetDataOfSignUp(bool isStudent){
         Person persona = new Person();
+        //si el alumno es estudiante, solicita su registro, semestre y grupo
         if(isStudent){
             do{
                 WriteLine("Ingresa tu registro");
@@ -48,7 +51,7 @@ public static partial class UI{
             }
         } while (persona.plantel < 1 || persona.plantel > 3);
 
-
+        //solicita el correo y lo valida para que sea adecuado conforme al formato de alumno, en caso de que el usuario, sea alumno
         if(isStudent){
             do{
                 WriteLine("Ingesa tu correo");
@@ -69,6 +72,7 @@ public static partial class UI{
         } while (PasswordValidation(persona.Contrasena) != 01);
         return persona;
     }
+    //funcion que agrega los datos al estudiante
     public static void SignUpEstudent(){
         Person person = new Person();
         Estudiante estudiante = new Estudiante();
@@ -89,6 +93,7 @@ public static partial class UI{
         usuario.Temporal = false;
         CrudFuntions.AddStudent(estudiante,usuario);
     }
+    //funcion que agrega los datos a docentes
     public static void SignUpDocente(){
         Person person = new Person();
         Docente docente = new Docente();
@@ -105,6 +110,7 @@ public static partial class UI{
         usuario.Temporal = false;
         CrudFuntions.AddTeacher(docente,usuario);
     }
+    //funcion que agrega los datos a almacenista
     public static void SignUpAlmacenista(){  
         Person person = new Person();
         Almacenista almacenista = new Almacenista();
