@@ -7,6 +7,7 @@ internal partial class Program
 {
     static void Main()
     {
+        //Prueba de push
         Console.Clear();
         Almacen db = new();
         CrudFuntions.CalcularAdeudo();
