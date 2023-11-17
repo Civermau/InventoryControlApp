@@ -91,7 +91,7 @@ public static partial class UI{
         usuario.Usuario1 = person.newUsername;
         usuario.Password = person.Contrasena;
         usuario.Temporal = false;
-        CrudFuntions.AddStudent(estudiante,usuario);
+        CrudFunctions.AddStudent(estudiante,usuario);
     }
     //funcion que agrega los datos a docentes
     public static void SignUpDocente(){
@@ -108,7 +108,7 @@ public static partial class UI{
         usuario.Usuario1 = person.newUsername;
         usuario.Password = person.Contrasena;
         usuario.Temporal = false;
-        CrudFuntions.AddTeacher(docente,usuario);
+        CrudFunctions.AddTeacher(docente,usuario);
     }
     //funcion que agrega los datos a almacenista
     public static void SignUpAlmacenista(){  
@@ -125,6 +125,6 @@ public static partial class UI{
         usuario.Usuario1 = person.newUsername;
         usuario.Password = person.Contrasena;
         usuario.Temporal = false;
-        CrudFuntions.AddWarehouseManager(almacenista,usuario);
+        CrudFunctions.AddWarehouseManager(almacenista,usuario);
     }
 }

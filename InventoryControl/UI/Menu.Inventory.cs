@@ -20,21 +20,21 @@ public static partial class UI
             switch (option)
             {
                 case "1":
-                    CrudFuntions.NewMaterial();
+                    CrudFunctions.NewMaterial();
                     break;
                 case "2":
-                    CrudFuntions.ListMaterialsWithHighlight();
-                    int updateMaterials = CrudFuntions.UpdateMaterials();
+                    CrudFunctions.ListMaterialsWithHighlight();
+                    int updateMaterials = CrudFunctions.UpdateMaterials();
                     WriteLine($"{updateMaterials} materiales modificados.");
                     WriteLine();
-                    CrudFuntions.ListMaterialsWithHighlight();
+                    CrudFunctions.ListMaterialsWithHighlight();
                     break;
                 case "3":
-                    CrudFuntions.ListMaterialsWithHighlight();
-                    int deletedMaterials = CrudFuntions.DeleteMaterials();
+                    CrudFunctions.ListMaterialsWithHighlight();
+                    int deletedMaterials = CrudFunctions.DeleteMaterials();
                     WriteLine($"{deletedMaterials} materiales eliminados.");
                     WriteLine();
-                    CrudFuntions.ListMaterialsWithHighlight();
+                    CrudFunctions.ListMaterialsWithHighlight();
                     break;
                 case "4":
                     return;

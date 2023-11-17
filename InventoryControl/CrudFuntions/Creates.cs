@@ -1,7 +1,52 @@
 using System;
 using AlmacenDataContext;
 using AlmacenSQLiteEntities;
-public static partial class CrudFuntions {
+public static partial class CrudFunctions
+{
+
+    //THIS IS EXPERIMENTAL CODE, THIS IS NOT INTENDED TO WORK, NOR BE USED
+    public static void AddEntity<T>(T entity, Usuario usuario) where T : class
+    {
+        using (Almacen db = new Almacen())
+        {
+            var checkEntity = db.Set<T>().Find(entity);
+
+            if (checkEntity != null)
+            {
+                WriteLine($"Datos de {typeof(T).Name} ya existentes");
+                return;
+            }
+
+            int? lastUserId = db.Usuarios.OrderByDescending(u => u.UsuarioId).Select(u => u.UsuarioId).FirstOrDefault();
+            int userID = lastUserId.HasValue ? lastUserId.Value + 1 : 1;
+
+            // Determine the ID for the entity based on its type
+            int entityId = (typeof(T) == typeof(Estudiante)) ? ((Estudiante)(object)entity).EstudianteId :
+                            (typeof(T) == typeof(Docente)) ? ((Docente)(object)entity).DocenteId :
+                            (typeof(T) == typeof(Almacenista)) ? ((Almacenista)(object)entity).AlmacenistaId : 0;
+
+            entityId = entityId != 0 ? entityId : userID;
+
+            usuario.UsuarioId = userID;
+
+            // Set the ID for the entity
+            if (typeof(T) == typeof(Estudiante))
+                ((Estudiante)(object)entity).EstudianteId = entityId;
+            else if (typeof(T) == typeof(Docente))
+                ((Docente)(object)entity).DocenteId = entityId;
+            else if (typeof(T) == typeof(Almacenista))
+                ((Almacenista)(object)entity).AlmacenistaId = entityId;
+
+            Clear();
+            db.Usuarios.Add(usuario);
+            db.SaveChanges();
+
+            db.Set<T>().Add(entity);
+            db.SaveChanges();
+        }
+    }
+
+
     public static void AddStudent(Estudiante estudiante, Usuario usuario) {
         using (Almacen db = new()) {
             var CheckStudent = db.Estudiantes.FirstOrDefault(r => r.EstudianteId == estudiante.EstudianteId || r.Correo == estudiante.Correo);
@@ -88,7 +133,7 @@ public static partial class CrudFuntions {
             db.SaveChanges();
         }
     }
-    x
+    
     public static void NewMant()
     {
         Mantenimiento mantenimiento = GetDataOfMantenimiento();
