@@ -22,7 +22,7 @@ public static partial class CrudFunctions
             string correoValue = (string)correoProperty.GetValue(entity);
 
             // Check if an entity with the same ID or correo already exists
-            var checkEntity = db.Set<T>().FirstOrDefault(e => (int)idProperty.GetValue(e) == entityId || (string)correoProperty.GetValue(e) == correoValue);
+            var checkEntity = db.Set<T>().AsEnumerable().FirstOrDefault(e => (int)idProperty.GetValue(e) == entityId || (string)correoProperty.GetValue(e) == correoValue);
 
             if (checkEntity != null)
             {
@@ -41,9 +41,15 @@ public static partial class CrudFunctions
                 idProperty.SetValue(entity, userID);
             }
 
+            string userIdName = "UsuarioId";
+            var userId = typeof(T).GetProperty(userIdName);
+            userId.SetValue(entity, userID);
+
+
             Clear();
+            
             db.Usuarios.Add(usuario);
-            db.SaveChanges();
+            
 
             db.Set<T>().Add(entity);
             db.SaveChanges();

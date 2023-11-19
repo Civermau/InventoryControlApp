@@ -292,7 +292,7 @@ public static partial class CrudFunctions
             Estudiante? estudiantes = db.Estudiantes!.FirstOrDefault(p => p.EstudianteId == id);
             if (estudiantes is null)
             {
-                WriteLine("No se encontró un docente para eliminar");
+                WriteLine("No se encontró un estudiante para eliminar");
                 return 0;
             }
             else
