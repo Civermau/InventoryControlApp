@@ -10,7 +10,7 @@ internal partial class Program
         //Prueba de push
         Console.Clear();
         Almacen db = new();
-        CrudFuntions.CalcularAdeudo();
+        CrudFunctions.AddEntity(new Estudiante(), new Usuario());
         WriteLine($"Provider: {db.Database.ProviderName}");
         UI.Manage();
     }

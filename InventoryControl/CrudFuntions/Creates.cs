@@ -9,7 +9,20 @@ public static partial class CrudFunctions
     {
         using (Almacen db = new Almacen())
         {
-            var checkEntity = db.Set<T>().Find(entity);
+            string idPropertyName = typeof(T).Name + "Id";
+
+            var idProperty = typeof(T).GetProperty(idPropertyName);
+
+            string correoPropertyName = "Correo";
+
+            var correoProperty = typeof(T).GetProperty(correoPropertyName);
+
+            // Get the ID and correo values of the entity
+            int entityId = (int)idProperty.GetValue(entity);
+            string correoValue = (string)correoProperty.GetValue(entity);
+
+            // Check if an entity with the same ID or correo already exists
+            var checkEntity = db.Set<T>().FirstOrDefault(e => (int)idProperty.GetValue(e) == entityId || (string)correoProperty.GetValue(e) == correoValue);
 
             if (checkEntity != null)
             {
@@ -20,22 +33,13 @@ public static partial class CrudFunctions
             int? lastUserId = db.Usuarios.OrderByDescending(u => u.UsuarioId).Select(u => u.UsuarioId).FirstOrDefault();
             int userID = lastUserId.HasValue ? lastUserId.Value + 1 : 1;
 
-            // Determine the ID for the entity based on its type
-            int entityId = (typeof(T) == typeof(Estudiante)) ? ((Estudiante)(object)entity).EstudianteId :
-                            (typeof(T) == typeof(Docente)) ? ((Docente)(object)entity).DocenteId :
-                            (typeof(T) == typeof(Almacenista)) ? ((Almacenista)(object)entity).AlmacenistaId : 0;
-
-            entityId = entityId != 0 ? entityId : userID;
-
             usuario.UsuarioId = userID;
 
-            // Set the ID for the entity
-            if (typeof(T) == typeof(Estudiante))
-                ((Estudiante)(object)entity).EstudianteId = entityId;
-            else if (typeof(T) == typeof(Docente))
-                ((Docente)(object)entity).DocenteId = entityId;
-            else if (typeof(T) == typeof(Almacenista))
-                ((Almacenista)(object)entity).AlmacenistaId = entityId;
+            // Set the ID for the entity if it is not set
+            if (entityId == 0)
+            {
+                idProperty.SetValue(entity, userID);
+            }
 
             Clear();
             db.Usuarios.Add(usuario);
@@ -45,6 +49,7 @@ public static partial class CrudFunctions
             db.SaveChanges();
         }
     }
+
 
 
     public static void AddStudent(Estudiante estudiante, Usuario usuario) {
