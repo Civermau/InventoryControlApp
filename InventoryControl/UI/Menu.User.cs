@@ -3,7 +3,7 @@ using AlmacenDataContext;
 using AlmacenSQLiteEntities;
 
 public static partial class UI{
-    //Menu para el estudiante
+    //Menu para el estudiante 
     static void StudentUI(Estudiante? estudiante){
         do{
             WriteLine("Alumno Menu:");
@@ -17,16 +17,16 @@ public static partial class UI{
             Clear();
             switch (option){
                 case "1":
-                    CrudFuntions.ListCategories(2);
+                    CrudFunctions.ListCategories(2);
                     break;
                 case "2":
-                    CrudFuntions.OrderMaterial(2,estudiante.UsuarioId);
+                    CrudFunctions.OrderMaterial(2,estudiante.UsuarioId);
                     break;
                 case "3":
-                    CrudFuntions.ListOrders(2,estudiante.EstudianteId);
+                    CrudFunctions.ListOrders(2,estudiante.EstudianteId);
                     break;
                 case "4":
-                    CrudFuntions.HistoryOfOrders(2,estudiante.EstudianteId);
+                    CrudFunctions.HistoryOfOrders(2,estudiante.EstudianteId);
                     break;
                 case "5":
                     ForgotPassword();
@@ -57,19 +57,19 @@ public static partial class UI{
             switch (option)
             {
                 case "1":
-                    CrudFuntions.HistoryOfOrders(1,docente.DocenteId);
+                    CrudFunctions.HistoryOfOrders(1,docente.DocenteId);
                     break;
                 case "2":
-                    CrudFuntions.ListOrders(1,docente.DocenteId);
+                    CrudFunctions.ListOrders(1,docente.DocenteId);
                     break;
                 case "3":
-                    CrudFuntions.OrderMaterial(1,docente.UsuarioId);
+                    CrudFunctions.OrderMaterial(1,docente.UsuarioId);
                     break;
                 case "4":
-                    CrudFuntions.ListCategories(1);
+                    CrudFunctions.ListCategories(1);
                     break;
                 case "5":
-                    CrudFuntions.ApprovedOrder(1,docente.DocenteId);
+                    CrudFunctions.ApprovedOrder(1,docente.DocenteId);
                     break;
                 case "6":
                     ForgotPassword();
@@ -100,41 +100,43 @@ public static partial class UI{
             string option = ReadLine()??"";
             Clear();
 
+            Almacen db = new Almacen();
             switch (option){
                 case "1":
                     ManageInventory();
                     break;
                 case "2":
-                    CrudFuntions.ListOrders(3,almacenista.AlmacenistaId);
+                    CrudFunctions.ListOrders(3,almacenista.AlmacenistaId);
                     break;
                 case "3":
-                    CrudFuntions.GenerateReports();
+                    CrudFunctions.GenerateReports();
                     break;
                 case "4":
-                    CrudFuntions.OrderMaterial(3,almacenista.AlmacenistaId);
+                    CrudFunctions.OrderMaterial(3,almacenista.AlmacenistaId);
                     break;
                 case "5":
-                    CrudFuntions.ListOrdersWithHighlight();
-                    int updateOrders = CrudFuntions.UpdateOrders();
+                    CrudFunctions.ListEntitiesWithHighlight(db.Pedidos);
+                    Pedido updatePedido = new Pedido();
+                    int updateOrders = CrudFunctions.UpdateOrders(updatePedido);
                     WriteLine($"{updateOrders} pedidos modificados.");
                     WriteLine();
-                    CrudFuntions.ListOrdersWithHighlight();
+                    CrudFunctions.ListEntitiesWithHighlight(db.Pedidos);
                     break;
                 case "6":
-                    CrudFuntions.ListOrdersWithHighlight();
-                    int deletedOrders = CrudFuntions.DeleteOrders();
+                    CrudFunctions.ListEntitiesWithHighlight(db.Pedidos);
+                    int deletedOrders = CrudFunctions.DeleteEntity<Pedido>(0);
                     WriteLine($"{deletedOrders} pedidos eliminados.");
                     WriteLine();
-                    CrudFuntions.ListOrdersWithHighlight();
+                    CrudFunctions.ListEntitiesWithHighlight(db.Pedidos);
                     break;
                 case "7":
                     ForgotPassword();
                     break;
                 case "8":
-                    CrudFuntions.NewReportMant();
+                    CrudFunctions.NewReportMant();
                     break;
                 case "9":
-                    CrudFuntions.EntregaMaterial();
+                    CrudFunctions.EntregaMaterial();
                     break;
                 case "10":
                     return;
@@ -168,77 +170,81 @@ public static partial class UI{
             WriteLine("18: Logout"); //check
             String option = ReadLine()??"";
             Clear();
-
+            Almacen db = new Almacen();
             switch (option){
                 case "1":
-                    CrudFuntions.ListOrdersWithHighlight();
-                    int deletedOrders = CrudFuntions.DeleteOrders();
+                    CrudFunctions.ListEntitiesWithHighlight(db.Pedidos);
+                    int deletedOrders = CrudFunctions.DeleteEntity<Pedido>(0);
                     WriteLine($"{deletedOrders} pedidos eliminados.");
                     WriteLine();
-                    CrudFuntions.ListOrdersWithHighlight();
+                    CrudFunctions.ListEntitiesWithHighlight(db.Pedidos);
                     break;
                 case "2":
-                    CrudFuntions.ListTeachers();
-                    int deletedTeachers = CrudFuntions.DeleteTeachers();
+                    CrudFunctions.ListEntitiesWithHighlight(db.Docentes);
+                    int deletedTeachers = CrudFunctions.DeleteEntity<Docente>(0);
                     WriteLine($"{deletedTeachers} maestros eliminados.");
                     WriteLine();
-                    CrudFuntions.ListTeachers();
+                    CrudFunctions.ListEntitiesWithHighlight(db.Docentes);
                     break;
                 case "3":
-                    CrudFuntions.ListInventoryManager();
-                    int deletedInventoryManager = CrudFuntions.DeleteInventoryManager();
+                    CrudFunctions.ListEntitiesWithHighlight(db.Almacenistas);
+                    int deletedInventoryManager = CrudFunctions.DeleteEntity<Almacenista>(0);
                     WriteLine($"{deletedInventoryManager} almacenistas eliminados.");
                     WriteLine();
-                    CrudFuntions.ListInventoryManager();
+                    CrudFunctions.ListEntitiesWithHighlight(db.Almacenistas);
                     break;
                 case "4":
-                    CrudFuntions.ListStudents();
-                    int deletedStudents = CrudFuntions.DeleteStudents();
+                    CrudFunctions.ListEntitiesWithHighlight(db.Estudiantes);
+                    int deletedStudents = CrudFunctions.DeleteEntity<Estudiante>(0);
                     WriteLine($"{deletedStudents} estudiantes eliminados.");
                     WriteLine();
-                    CrudFuntions.ListStudents();
+                    CrudFunctions.ListEntitiesWithHighlight(db.Estudiantes);
                     break;
                     /*
                 case "5":
-                    CrudFuntions.ReadMantenimientos();
-                    int deletedMat = CrudFuntions.DeleteMant();
+                    CrudFunctions.ReadMantenimientos();
+                    int deletedMat = CrudFunctions.DeleteMant();
                     WriteLine($"{deletedMat} mantenimientos eliminados.");
                     WriteLine();
-                    CrudFuntions.ReadMantenimientos();
+                    CrudFunctions.ReadMantenimientos();
                     break;
                     */
                 case "6":
-                    CrudFuntions.ListOrdersWithHighlight();
-                    int updateOrders = CrudFuntions.UpdateOrders();
+                    CrudFunctions.ListEntitiesWithHighlight(db.Pedidos);
+                    Pedido updatePedido = new Pedido();
+                    int updateOrders = CrudFunctions.UpdateOrders(updatePedido);
                     WriteLine($"{updateOrders} pedidos modificados.");
                     WriteLine();
-                    CrudFuntions.ListOrdersWithHighlight();
+                    CrudFunctions.ListEntitiesWithHighlight(db.Pedidos);
                     break;
                 case "7":
-                    CrudFuntions.ListTeachers();
-                    int updateTeachers = CrudFuntions.UpdateDataUsers(1);
+                    CrudFunctions.ListEntitiesWithHighlight(db.Docentes);
+                    Docente updateDocente = new Docente();
+                    int updateTeachers = CrudFunctions.UpdateDataUsers(updateDocente);
                     WriteLine($"{updateTeachers} maestros modificados.");
                     WriteLine();
-                    CrudFuntions.ListTeachers();
+                    CrudFunctions.ListEntitiesWithHighlight(db.Docentes);
                     break;
                 case "8":
-                    CrudFuntions.ListInventoryManager();
-                    int updateInventoryManager = CrudFuntions.UpdateDataUsers(2);
+                    CrudFunctions.ListEntitiesWithHighlight(db.Almacenistas);
+                    Almacenista updateAlmacenista = new Almacenista();
+                    int updateInventoryManager = CrudFunctions.UpdateDataUsers(updateAlmacenista);
                     WriteLine($"{updateInventoryManager} almacenistas modificados.");
                     WriteLine();
-                    CrudFuntions.ListInventoryManager();
+                    CrudFunctions.ListEntitiesWithHighlight(db.Almacenistas);
                     break;
                 case "9":
-                    CrudFuntions.ListStudents();
-                    int updateStudents = CrudFuntions.UpdateDataUsers(3);
+                    CrudFunctions.ListEntitiesWithHighlight(db.Estudiantes);
+                    Estudiante updateEstudiante = new Estudiante();
+                    int updateStudents = CrudFunctions.UpdateDataUsers(updateEstudiante);
                     WriteLine($"{updateStudents} estudiantes modificados.");
                     WriteLine();
-                    CrudFuntions.ListStudents();
+                    CrudFunctions.ListEntitiesWithHighlight(db.Estudiantes);
                     break;
                 case "10":
                     break;
                 case "11":
-                    CrudFuntions.OrderMaterial(4,coordinador.UsuarioId);
+                    CrudFunctions.OrderMaterial(4,coordinador.UsuarioId);
                     break;
                 case "12":
                     UI.SignUpDocente();
@@ -250,10 +256,10 @@ public static partial class UI{
                     UI.SignUpEstudent();
                     break;
                 case "15":
-                    CrudFuntions.NewMant();
+                    CrudFunctions.NewMant();
                     break;
                 case "16":
-                    CrudFuntions.NewReportMant();
+                    CrudFunctions.NewReportMant();
                     break;
                 case "17":
                     ForgotPassword();

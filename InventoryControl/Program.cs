@@ -11,7 +11,7 @@ internal partial class Program
         
         Console.Clear();
         Almacen db = new();
-        //CrudFuntions.CalcularAdeudo();
+        //CrudFunctions.CalcularAdeudo();
         WriteLine($"Provider: {db.Database.ProviderName}");
         UI.Manage();
     }

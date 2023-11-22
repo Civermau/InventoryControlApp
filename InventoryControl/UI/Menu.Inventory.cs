@@ -17,29 +17,33 @@ public static partial class UI
             String option = ReadLine()??"";
             Clear();
 
-            switch (option)
+            using (Almacen db = new Almacen())
             {
-                case "1":
-                    CrudFuntions.NewMaterial();
-                    break;
-                case "2":
-                    CrudFuntions.ListMaterialsWithHighlight();
-                    int updateMaterials = CrudFuntions.UpdateMaterials();
-                    WriteLine($"{updateMaterials} materiales modificados.");
-                    WriteLine();
-                    CrudFuntions.ListMaterialsWithHighlight();
-                    break;
-                case "3":
-                    CrudFuntions.ListMaterialsWithHighlight();
-                    int deletedMaterials = CrudFuntions.DeleteMaterials();
-                    WriteLine($"{deletedMaterials} materiales eliminados.");
-                    WriteLine();
-                    CrudFuntions.ListMaterialsWithHighlight();
-                    break;
-                case "4":
-                    return;
-                default:
-                    break;
+                switch (option)
+                {
+                    case "1":
+                        CrudFunctions.NewMaterial();
+                        break;
+                    case "2":
+                        CrudFunctions.ListEntitiesWithHighlight(db.Materiales);
+                        Material updateMaterial = new Material();
+                        int updateMaterials = CrudFunctions.UpdateMaterial(updateMaterial);
+                        WriteLine($"{updateMaterials} materiales modificados.");
+                        WriteLine();
+                        CrudFunctions.ListEntitiesWithHighlight(db.Materiales);
+                        break;
+                    case "3":
+                        CrudFunctions.ListEntitiesWithHighlight(db.Materiales);
+                        int deletedMaterials = CrudFunctions.DeleteEntity<Material>(0);
+                        WriteLine($"{deletedMaterials} materiales eliminados.");
+                        WriteLine();
+                        CrudFunctions.ListEntitiesWithHighlight(db.Materiales);
+                        break;
+                    case "4":
+                        return;
+                    default:
+                        break;
+                }
             }
         } while (true);
     }

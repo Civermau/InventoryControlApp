@@ -1,115 +1,82 @@
 using System;
 using AlmacenDataContext;
 using AlmacenSQLiteEntities;
-public static partial class CrudFuntions
+public static partial class CrudFunctions
 {
-    public static int UpdateOrders(){
-        using(Almacen db = new()){
-            string? input;
-            int LabID;
-            int pedidoId;
-            do{
-                WriteLine("Que pedido quieres modificar?");
-                input = ReadLine();
-                pedidoId = UI.GetPedidoID(input);
-            } while (UI.PedidoValidation(pedidoId) == false);
-            Pedido? pedido = db.Pedidos!.FirstOrDefault(p => p.PedidoId == pedidoId);
-            if((pedido is null)){
-                Program.Fail("No se encontro un pedido para modificar");
-                return 0;
-            }
-            else{
-                Program.SectionTitle("¿Que quieres modificar?");
-                WriteLine("1. Fecha");
-                WriteLine("2. Laboratorio");
-                WriteLine("3. Hora de Entrega");
-                WriteLine("4. Hora de Devolucion");
-                WriteLine("5. Estado de una solicitud");
-                WriteLine("6. Cancelar modificacion");
-                string? opcion = ReadLine();
-                
-                switch(opcion)
-                {
-                    case "1":
-                    {
-                        WriteLine($"Fecha actual: {pedido.Fecha}");
-                        do{
-                            WriteLine("Ingresa la fecha modificada: ");
-                            input = ReadLine();
-                        }while(UI.DateValidation(input) == false);
-                        pedido.Fecha = DateTime.Parse($"{input} {pedido.HoraEntrega:HH:mm:ss}");
-                        pedido.HoraEntrega = DateTime.Parse($"{pedido.Fecha:yyyy-MM-dd} {pedido.HoraEntrega:HH:mm:ss}");
-                        pedido.HoraDevolucion = DateTime.Parse($"{pedido.Fecha:yyyy-MM-dd} {pedido.HoraDevolucion:HH:mm:ss}");
-                        break;
-                    }
-                    case "2":
-                    {
-                        WriteLine($"Laboratorio actual: {pedido.Laboratorio.Nombre}");
-                        do{
-                            ListLaboratories();
-                            WriteLine("Ingresa el laboratorio modificado:");
-                            input = ReadLine();
-                            LabID = UI.GetLabID(input);
-                        } while (UI.LabValidation(LabID) == false);
-                        pedido.LaboratorioId = LabID;
-                        break;
-                    }
-                    case "3":
-                    {
-                        WriteLine($"Hora de entrega actual: {pedido.HoraEntrega:HH:mm:ss}");
-                        do{
-                            WriteLine("Ingresa la hora de entrega modificada:");
-                            input = ReadLine();
-                        } while (UI.HourValidation(input) == false);
-                        pedido.HoraEntrega = DateTime.Parse($"{pedido.Fecha:yyyy-MM-dd} {input}");
-                        pedido.Fecha = DateTime.Parse($"{pedido.Fecha:yyyy-MM-dd} {pedido.HoraEntrega:HH:mm:ss}");
-                        break;
-                    }
-                    case "4":
-                    {
-                        WriteLine($"Hora de devolucion actual: {pedido.HoraDevolucion:HH:mm:ss}");
-                        do{
-                            WriteLine("Ingresa la hora de devolucion modificada:");
-                            input = ReadLine();
-                        } while (UI.HourValidation(input) == false);
-                        pedido.HoraDevolucion = DateTime.Parse($"{pedido.Fecha:yyyy-MM-dd} {input}");
-                        break;
-                    }
-                    case "5":
-                        WriteLine($"Estado actual: {(pedido.Estado ? "SI" : "NO")}");
-                        do{
-                            WriteLine("¿Quiere aprobar o denegar el pedido?");
-                            WriteLine("1. Aprovar");
-                            WriteLine("2. Denegar");
-                            input = ReadLine();
-                        } while (input == "1\n" || input == "2\n");
+    public static int UpdateOrders(Pedido updatedOrder)
+    {
+        using (Almacen db = new Almacen())
+        {
+            Pedido existingOrder = db.Pedidos.FirstOrDefault(p => p.PedidoId == updatedOrder.PedidoId);
 
-                        input = input!.Trim();
+            if (existingOrder != null)
+            {
+                // Sobreescribir los campos del pedido existente con los datos actualizados
+                existingOrder.Fecha = updatedOrder.Fecha;
+                existingOrder.LaboratorioId = updatedOrder.LaboratorioId;
+                existingOrder.HoraEntrega = updatedOrder.HoraEntrega;
+                existingOrder.HoraDevolucion = updatedOrder.HoraDevolucion;
+                existingOrder.EstudianteId = updatedOrder.EstudianteId;
+                existingOrder.DocenteId = updatedOrder.DocenteId;
+                existingOrder.CoordinadorId = updatedOrder.CoordinadorId;
+                existingOrder.Estado = updatedOrder.Estado;
 
-                        if(input == "1"){
-                            pedido.Estado = true;
-                            Program.SectionTitle("Aprovado");
-                        }
-                        else if(input == "2"){
-                            pedido.Estado = false;
-                            db.SaveChanges();
-                            Program.Fail("Denegado");
-                        }
-                        break;
-                    case "6":
-                        Program.Fail("Modificacion cancelada");
-                        break;
-                    default:
-                        WriteLine("Opcion invalida");
-                        break;
-                }
+                // Guardar los cambios en la base de datos
                 int affected = db.SaveChanges();
+
+                WriteLine("Pedido actualizado exitosamente.");
                 return affected;
+            }
+            else
+            {
+                WriteLine("No se encontró ningún pedido con la ID proporcionada.");
+                return 0;
             }
         }
     }
-    
-    public static int UpdateDataUsers(int typeUser){
+
+    public static int UpdateDataUsers<T>(T newUser) where T : class
+    {
+        using (Almacen db = new Almacen())
+        {
+            string idPropertyName = typeof(T).Name + "Id";
+
+            var idProperty = typeof(T).GetProperty(idPropertyName);
+
+            int entityId = (int)idProperty.GetValue(newUser);
+
+            var existingUser = db.Set<T>().Find(entityId);
+
+            if (existingUser != null)
+            {
+                var properties = typeof(T).GetProperties();
+
+                foreach (var property in properties)
+                {
+                    if (property.Name != idPropertyName)
+                    {
+
+                        var newValue = property.GetValue(newUser);
+
+                        property.SetValue(existingUser, newValue);
+                    }
+                }
+
+                int affected = db.SaveChanges();
+
+                WriteLine($"{typeof(T).Name} actualizado exitosamente.");
+                return affected;
+            }
+            else
+            {
+                WriteLine($"No se encontró ningún {typeof(T).Name} con la ID proporcionada.");
+                return 0;
+            }
+        }
+    }
+
+
+    public static int UpdateDataUsesrs(int typeUser){
         using(Almacen db = new()){
             Docente? docente = new Docente();
             Almacenista? almacenista = new Almacenista();
@@ -372,158 +339,36 @@ public static partial class CrudFuntions
         }
     }
 
-    public static int UpdateMaterials(){
-        using(Almacen db = new()){
-            Material material = new Material();
-            string? input;
-            int id;
-            do{
-                WriteLine("Que material quieres modificar?");
-                input = ReadLine();
-                id = UI.GetMaterialForID(input);
-            } while (UI.MaterialValidation(id) == false);
-            material = db.Materiales!.FirstOrDefault(p => p.MaterialId == id);
-            if((material is null)){
-                Program.Fail("No se encontro un material para modificar");
-                return 0;
-            }
-            else{
-                Program.SectionTitle("¿Que quieres modificar?");
-                WriteLine("1. Modelo");
-                WriteLine("2. Descripcion");
-                WriteLine("3. Año de entrada");
-                WriteLine("4. Marca");
-                WriteLine("5. Categoria");
-                WriteLine("6. Plantel");
-                WriteLine("7. Serie");
-                WriteLine("8. Valor Historico");
-                WriteLine("9. Condicion");
-                WriteLine("10. Cancelar modificacion");
-                string? opcion = ReadLine();
-                
-                switch(opcion)
-                {
-                    case "1":
-                    {
-                        WriteLine($"Modelo actual: {material.Modelo.Nombre}");
-                        ReadModelos();
-                        GeneralSearchModels();
-                        do{
-                            WriteLine("Ingresa el modelo modificada:");
-                            input = ReadLine();
-                            id = UI.GetModeloID(input);
-                        } while (UI.ModeloValidation(id) == false);
-                        material.ModeloId = id;
-                        break;
-                    }
-                    case "2":
-                    {
-                        WriteLine($"Descripcion actual: {material.Descripcion}");
-                        do{
-                            WriteLine("Ingresa la descripcion modificada:");
-                            material.Descripcion = ReadLine();
-                        } while (material.Descripcion.Length > 255);
-                        break;
-                    }
-                    case "3":
-                    {
-                        WriteLine($"Año de entrada actual: {material.YearEntrada}");
-                        do{
-                            WriteLine("Ingresa el año de entrada modificado:");
-                            input = ReadLine();
-                        }while(!int.TryParse(input, out _));
-                        material.YearEntrada = int.Parse(input);
-                        break;
-                    }
-                    case "4":
-                    {
-                        WriteLine($"Marca actual: {material.Marca.Nombre}");
-                        ReadMarcas();
-                        GeneralSearchMarcas();
-                        do{
-                            WriteLine("Ingresa la marca modificada:");
-                            input = ReadLine();
-                            id = UI.GetMarcaID(input);
-                        } while (UI.MarcaValidation(id) == false);
-                        material.MarcaId = id;
-                        break;
-                    }
-                    case "5":
-                        WriteLine($"Categoria actual: {material.Categoria.Nombre}");
-                        ReadCategorias();
-                        GeneralSearchCategory(4);
-                        do{
-                            WriteLine("Ingresa la categoria modificada:");
-                            input = ReadLine();
-                            id = UI.GetCategoriaID(input);
-                        } while (UI.CategoriaValidation(id) == false);
-                        material.CategoriaId = id;
-                        break;
-                    case "6":
-                        WriteLine($"Plantel actual: {material.Plantel.Nombre}");
-                        do{
-                            WriteLine("Plantel: ");
-                            WriteLine("1. Colomos");
-                            WriteLine("2. Tonalá");
-                            WriteLine("3. Río Santiago");
-                            input = ReadLine();
-                            if (!int.TryParse(input, out _))
-                            {
-                                WriteLine("Opción invalida");
-                            }
-                            material.PlantelId = int.Parse(input);
-                        } while (material.PlantelId < 1 || material.PlantelId > 3);
-                        break;
-                    case "7":
-                        WriteLine($"Numero de serie actual: {material.Serie}");
-                        do{
-                            WriteLine("Ingresa el numero de serie a modificar:");
-                            material.Serie = ReadLine();
-                        } while (material.Serie.Length > 255);
-                        break;
-                    case "8":
-                        WriteLine($"Valor historico actual: {material.ValorHistorico}");
-                        do{
-                            WriteLine("Ingresa el valor historico modificado:");
-                            input = ReadLine();
-                        }while(!decimal.TryParse(input, out _));
-                        material.ValorHistorico = decimal.Parse(input);
-                        break;
-                    case "9":
-                        WriteLine($"Condicion actual: {material.Condicion}");
-                        // Condicion: 1 disponible, 2 no disponible
-                        do{
-                            WriteLine("Condicion del material");
-                            WriteLine("1. Disponible para pedidos");
-                            WriteLine("2. No disponible para pedidos");
-                            input = ReadLine();
-                        } while (input == "1\n" || input == "2\n");
+    public static int UpdateMaterial(Material updatedMaterial)
+    {
+        using (Almacen db = new Almacen())
+        {
+            Material existingMaterial = db.Materiales.FirstOrDefault(m => m.MaterialId == updatedMaterial.MaterialId);
 
-                        input = input!.Trim();
+            if (existingMaterial != null)
+            {
+                // Sobreescribir los campos del material existente con los datos actualizados
+                existingMaterial.ModeloId = updatedMaterial.ModeloId;
+                existingMaterial.Descripcion = updatedMaterial.Descripcion;
+                existingMaterial.ValorHistorico = updatedMaterial.ValorHistorico;
+                existingMaterial.YearEntrada = updatedMaterial.YearEntrada;
+                existingMaterial.MarcaId = updatedMaterial.MarcaId;
+                existingMaterial.CategoriaId = updatedMaterial.CategoriaId;
+                existingMaterial.PlantelId = updatedMaterial.PlantelId;
+                existingMaterial.Serie = updatedMaterial.Serie;
 
-                        if(input == "1"){
-                            material.Condicion = input;
-                            Program.SectionTitle("Disponible");
-                        }
-                        else if(input == "2"){
-                            material.Condicion = input;
-                            db.SaveChanges();
-                            Program.Fail("No disponible");
-                        }
-                        else{
-                            Program.Fail("No existe la condicion");
-                        }
-                        break;
-                    case "10":
-                        Program.Fail("Modificacion cancelada");
-                        break;
-                    default:
-                        WriteLine("Opcion invalida");
-                        break;
-                }
+                // Guardar los cambios en la base de datos
                 int affected = db.SaveChanges();
+
+                WriteLine("Material actualizado exitosamente.");
                 return affected;
+            }
+            else
+            {
+                WriteLine("No se encontró ningún material con la ID proporcionada.");
+                return 0;
             }
         }
     }
+
 }
